@@ -1,8 +1,8 @@
 /** @format */
 
 import React from 'react';
-import Header from '../App/HeaderFooter/Header';
-import Footer from '../App/HeaderFooter/Footer';
+import Header from '../HeaderFooter/Header';
+import Footer from '../HeaderFooter/Footer';
 
 export default function Layout(props) {
 	return (
