@@ -1,12 +1,9 @@
 /** @format */
 
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 export default class Search extends Component {
-	static propTypes = {
-		prop: PropTypes,
-	};
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -17,9 +14,11 @@ export default class Search extends Component {
 		this.setState({
 			text: e.target.value,
 		});
+		console.log(e.target.value);
 	};
 	onSubmitHandler = (e) => {
 		e.preventDefault();
+		console.log(this.state.text);
 	};
 
 	render() {
