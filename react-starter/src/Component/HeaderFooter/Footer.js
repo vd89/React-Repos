@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-export default function Footer() {
+function Footer() {
 	return (
 		<div className='container text-center'>
 			<footer className='footer mt-auto py-3'>
@@ -11,3 +11,5 @@ export default function Footer() {
 		</div>
 	);
 }
+
+export default Footer;
