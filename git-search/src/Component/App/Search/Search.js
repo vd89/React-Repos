@@ -24,8 +24,8 @@ export class Search extends Component {
 		return (
 			<div className='row mt-2'>
 				<div className='card mt-2 col-md-8 m-auto'>
-					<div className='card-head'>
-						<h2>Pleas Search the Github User</h2>
+					<div className='card-header text-center'>
+						<h2>Search the Github User</h2>
 					</div>
 					<div className='card-body'>
 						<form onSubmit={this.onSubmitHandler}>
