@@ -8,6 +8,7 @@ export class Search extends Component {
 		searchUser: PropTypes.func.isRequired,
 		clearUsers: PropTypes.func.isRequired,
 		showClear: PropTypes.bool.isRequired,
+		setAlert: PropTypes.func.isRequired,
 	};
 
 	constructor(props) {
@@ -23,10 +24,14 @@ export class Search extends Component {
 	};
 	onSubmitHandler = (e) => {
 		e.preventDefault();
-		this.props.searchUser(this.state.text);
-		this.setState({
-			text: '',
-		});
+		if (this.state.text === '') {
+			this.props.setAlert('Enter Github User Name', 'danger');
+		} else {
+			this.props.searchUser(this.state.text);
+			this.setState({
+				text: '',
+			});
+		}
 	};
 
 	onClickHandler = () => {

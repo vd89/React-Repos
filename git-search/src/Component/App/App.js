@@ -6,6 +6,7 @@ import Footer from '../HeaderFooter/Footer';
 import Search from '../Search/Search';
 import Axios from 'axios';
 import MultipleUser from '../UI/MultipleUser';
+import Alert from '../UI/Alert';
 
 class App extends Component {
 	constructor(props) {
@@ -13,6 +14,7 @@ class App extends Component {
 		this.state = {
 			users: [],
 			loading: false,
+			alert: null,
 		};
 	}
 
@@ -39,16 +41,28 @@ class App extends Component {
 			users: [],
 		});
 	};
+	setAlert = (msg, type) => {
+		this.setState({
+			alert: { msg, type },
+		});
+		setTimeout(() => {
+			this.setState({
+				alert: null,
+			});
+		}, 2500);
+	};
 
 	render() {
 		return (
 			<>
 				<Header />
 				<div className='container'>
+					<Alert alert={this.state.alert} />
 					<Search
 						searchUser={this.searchUser}
 						clearUsers={this.clearUsers}
 						showClear={this.state.users.length > 0 ? true : false}
+						setAlert={this.setAlert}
 					/>
 					<MultipleUser loading={this.state.loading} users={this.state.users} />
 				</div>
