@@ -1,12 +1,15 @@
 /** @format */
 
 import React, { Component } from 'react';
+import Axios from 'axios';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
 import Header from '../HeaderFooter/Header';
 import Footer from '../HeaderFooter/Footer';
 import Search from '../Search/Search';
-import Axios from 'axios';
 import MultipleUser from '../UI/MultipleUser';
 import Alert from '../UI/Alert';
+import About from '../Pages/About';
 
 class App extends Component {
 	constructor(props) {
@@ -54,20 +57,34 @@ class App extends Component {
 
 	render() {
 		return (
-			<>
+			<Router>
 				<Header />
 				<div className='container'>
 					<Alert alert={this.state.alert} />
-					<Search
-						searchUser={this.searchUser}
-						clearUsers={this.clearUsers}
-						showClear={this.state.users.length > 0 ? true : false}
-						setAlert={this.setAlert}
-					/>
-					<MultipleUser loading={this.state.loading} users={this.state.users} />
+					<Switch>
+						<Route
+							exact
+							path='/'
+							render={(props) => (
+								<>
+									<Search
+										searchUser={this.searchUser}
+										clearUsers={this.clearUsers}
+										showClear={this.state.users.length > 0 ? true : false}
+										setAlert={this.setAlert}
+									/>
+									<MultipleUser
+										loading={this.state.loading}
+										users={this.state.users}
+									/>
+								</>
+							)}
+						/>
+						<Route exact path='/about' component={About} />
+					</Switch>
 				</div>
 				<Footer />
-			</>
+			</Router>
 		);
 	}
 }
