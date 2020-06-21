@@ -1,7 +1,7 @@
 /** @format */
 
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 function SingleUser({ user }) {
 	const { avatar_url, html_url, login } = user;
@@ -21,8 +21,8 @@ function SingleUser({ user }) {
 		</div>
 	);
 }
-// SingleUser.PropTypes = {
-// 	user: PropTypes.object.isRequired,
-// };
+SingleUser.propTypes = {
+	user: PropTypes.object.isRequired,
+};
 
 export default SingleUser;
