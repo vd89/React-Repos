@@ -80,11 +80,15 @@ class App extends Component {
 		});
 	};
 	// Get user Repos
-	getUserReops = async (userName) => {
+	getUserRepos = async (userName) => {
 		this.setState({ loading: true });
-		const reops = await Axios.get(
+		const res = await Axios.get(
 			`https://api.github.com/users/${userName}/repos?per_page=${this.repos_count}&sort=${this.repos_sort}&client_id=${this.client_id}&client_secret=${this.client_secret}`,
 		);
+		this.setState({
+			repos: res.data,
+			loading: false,
+		});
 	};
 
 	render() {
@@ -120,8 +124,10 @@ class App extends Component {
 								<User
 									{...props}
 									getUser={this.getUser}
+									userRepos={this.getUserRepos}
 									user={this.state.user}
 									loading={this.state.loading}
+									repos={this.state.repos}
 								/>
 							)}
 						/>
