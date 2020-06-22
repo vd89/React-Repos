@@ -2,9 +2,9 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { Link } from 'react-router-dom';
 function SingleUser({ user }) {
-	const { avatar_url, html_url, login } = user;
+	const { avatar_url, login } = user;
 	return (
 		<div className='container'>
 			<div className='card' style={{ width: '14rem' }}>
@@ -13,9 +13,9 @@ function SingleUser({ user }) {
 					<h3 className='card-title'>{login}</h3>
 				</div>
 				<div className='card-footer '>
-					<a href={html_url} className='btn btn-dark btn-block'>
+					<Link to={`/user/${login}`} className='btn btn-dark btn-block'>
 						Profile
-					</a>
+					</Link>
 				</div>
 			</div>
 		</div>

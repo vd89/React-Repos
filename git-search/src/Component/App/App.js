@@ -10,17 +10,25 @@ import Search from '../Search/Search';
 import MultipleUser from '../UI/MultipleUser';
 import Alert from '../UI/Alert';
 import About from '../Pages/About';
+import User from '../UI/User';
 
 class App extends Component {
+	//Default state
 	constructor(props) {
 		super(props);
 		this.state = {
 			users: [],
 			loading: false,
 			alert: null,
+			user: {},
+			repos: [],
 		};
+		this.client_id = 'c5868f39180303a9e8e4';
+		this.client_secret = '32735d5e618c1fc35ce25bcc7c44b0472f590a7c';
+		this.repos_count = 6;
+		this.repos_sort = 'created : asc';
 	}
-
+	// Renders first 30 users
 	async componentDidMount() {
 		this.setState({ loading: true });
 		const res = await Axios.get('https://api.github.com/users');
@@ -29,6 +37,8 @@ class App extends Component {
 			loading: false,
 		});
 	}
+
+	//Search user
 	searchUser = async (text) => {
 		this.setState({ loading: true });
 		const res = await Axios.get(
@@ -39,11 +49,14 @@ class App extends Component {
 			loading: false,
 		});
 	};
+
+	//Clear USer
 	clearUsers = () => {
 		this.setState({
 			users: [],
 		});
 	};
+	// Set Alert and clear auto
 	setAlert = (msg, type) => {
 		this.setState({
 			alert: { msg, type },
@@ -53,6 +66,25 @@ class App extends Component {
 				alert: null,
 			});
 		}, 2500);
+	};
+
+	// Get single user Method
+	getUser = async (userName) => {
+		this.setState({ loading: true });
+		const res = await Axios.get(
+			`https://api.github.com/users/${userName}?client_id=${this.client_id}&client_secret=${this.client_secret}`,
+		);
+		this.setState({
+			user: res.data,
+			loading: false,
+		});
+	};
+	// Get user Repos
+	getUserReops = async (userName) => {
+		this.setState({ loading: true });
+		const reops = await Axios.get(
+			`https://api.github.com/users/${userName}/repos?per_page=${this.repos_count}&sort=${this.repos_sort}&client_id=${this.client_id}&client_secret=${this.client_secret}`,
+		);
 	};
 
 	render() {
@@ -81,6 +113,18 @@ class App extends Component {
 							)}
 						/>
 						<Route exact path='/about' component={About} />
+						<Route
+							exact
+							path='/user/:login'
+							render={(props) => (
+								<User
+									{...props}
+									getUser={this.getUser}
+									user={this.state.user}
+									loading={this.state.loading}
+								/>
+							)}
+						/>
 					</Switch>
 				</div>
 				<Footer />
