@@ -29,6 +29,7 @@ export class User extends Component {
 			blog,
 			location,
 			hireable,
+			email,
 		} = this.props.user;
 		const { loading, repos } = this.props;
 		if (loading) {
@@ -95,6 +96,13 @@ export class User extends Component {
 										</li>
 									) : (
 										<i className='fa fa-time-circle text-danger' />
+									)}
+									{email ? (
+										<li className='list-group-item'>
+											<h4>Email : {email}</h4>
+										</li>
+									) : (
+										''
 									)}
 								</ul>
 							</div>

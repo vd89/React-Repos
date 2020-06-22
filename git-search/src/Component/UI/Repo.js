@@ -11,8 +11,8 @@ function Repo({ repo }) {
 					<div className='col-md-6'>
 						<a href={repo.html_url}>
 							<h3>{repo.name}</h3>
-							<p className='text-muted'>{repo.created_at}</p>
 						</a>
+						<p className='text-muted'>Created: {repo.created_at}</p>
 					</div>
 					<div className='col-md-6 d-flex justify-content-end text-center align-self-center'>
 						<span className='badge badge-primary mr-2'>
