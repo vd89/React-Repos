@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
@@ -12,131 +12,111 @@ import Alert from '../UI/Alert';
 import About from '../Pages/About';
 import User from '../UI/User';
 
-class App extends Component {
-	//Default state
-	constructor(props) {
-		super(props);
-		this.state = {
-			users: [],
-			loading: false,
-			alert: null,
-			user: {},
-			repos: [],
-		};
-		this.client_id = 'c5868f39180303a9e8e4';
-		this.client_secret = '32735d5e618c1fc35ce25bcc7c44b0472f590a7c';
-		this.repos_count = 6;
-		this.repos_sort = 'created : asc';
-	}
-	// Renders first 30 users
-	async componentDidMount() {
-		this.setState({ loading: true });
-		const res = await Axios.get('https://api.github.com/users');
-		this.setState({
-			users: res.data,
-			loading: false,
-		});
-	}
+const App = () => {
+	const [users, setUsers] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [alert, setAlert] = useState(null);
+	const [user, setUser] = useState({});
+	const [repos, setRepos] = useState([]);
+	const client_id = 'c5868f39180303a9e8e4';
+	const client_secret = '32735d5e618c1fc35ce25bcc7c44b0472f590a7c';
+	const repos_count = 6;
+	const repos_sort = 'created : asc';
 
 	//Search user
-	searchUser = async (text) => {
-		this.setState({ loading: true });
+	const searchUser = async (text) => {
+		setLoading(true);
 		const res = await Axios.get(
-			`https://api.github.com/search/users?q=${text}`,
+			`https://api.github.com/search/users?q=${text}`
 		);
-		this.setState({
-			users: res.data.items,
-			loading: false,
-		});
+		setUsers(res.data.items);
+		setLoading(false);
 	};
+	// Renders first 30 users
+	useEffect(() => {
+		const fetchData = async () => {
+			setLoading(true);
+			const res = await Axios.get('https://api.github.com/users');
+			setUsers(res.data);
+			setLoading(false);
+		};
+		fetchData();
+	}, []);
 
 	//Clear USer
-	clearUsers = () => {
-		this.setState({
-			users: [],
-		});
+	const clearUsers = () => {
+		setUser([]);
+		setLoading(false);
 	};
-	// Set Alert and clear auto
-	setAlert = (msg, type) => {
-		this.setState({
-			alert: { msg, type },
-		});
+	const showAlert = (msg, type) => {
+		setAlert({ msg: msg, type: type });
 		setTimeout(() => {
-			this.setState({
-				alert: null,
-			});
+			setAlert(null);
 		}, 2500);
 	};
 
 	// Get single user Method
-	getUser = async (userName) => {
-		this.setState({ loading: true });
+	const getUser = async (userName) => {
+		setLoading(true);
 		const res = await Axios.get(
-			`https://api.github.com/users/${userName}?client_id=${this.client_id}&client_secret=${this.client_secret}`,
+			`https://api.github.com/users/${userName}?client_id=${client_id}&client_secret=${client_secret}`
 		);
-		this.setState({
-			user: res.data,
-			loading: false,
-		});
+		setUser(res.data);
+		setLoading(false);
 	};
 	// Get user Repos
-	getUserRepos = async (userName) => {
-		this.setState({ loading: true });
+	const getUserRepos = async (userName) => {
+		setLoading(true);
+
 		const res = await Axios.get(
-			`https://api.github.com/users/${userName}/repos?per_page=${this.repos_count}&sort=${this.repos_sort}&client_id=${this.client_id}&client_secret=${this.client_secret}`,
+			`https://api.github.com/users/${userName}/repos?per_page=${repos_count}&sort=${repos_sort}&client_id=${client_id}&client_secret=${client_secret}`
 		);
-		this.setState({
-			repos: res.data,
-			loading: false,
-		});
+		setRepos(res.data);
+		setLoading(false);
 	};
 
-	render() {
-		return (
-			<Router>
-				<Header />
-				<div className='container'>
-					<Alert alert={this.state.alert} />
-					<Switch>
-						<Route
-							exact
-							path='/'
-							render={(props) => (
-								<>
-									<Search
-										searchUser={this.searchUser}
-										clearUsers={this.clearUsers}
-										showClear={this.state.users.length > 0 ? true : false}
-										setAlert={this.setAlert}
-									/>
-									<MultipleUser
-										loading={this.state.loading}
-										users={this.state.users}
-									/>
-								</>
-							)}
-						/>
-						<Route exact path='/about' component={About} />
-						<Route
-							exact
-							path='/user/:login'
-							render={(props) => (
-								<User
+	return (
+		<Router>
+			<Header />
+			<div className='container'>
+				<Alert alert={alert} />
+				<Switch>
+					<Route
+						exact
+						path='/'
+						render={(props) => (
+							<>
+								<Search
 									{...props}
-									getUser={this.getUser}
-									userRepos={this.getUserRepos}
-									user={this.state.user}
-									loading={this.state.loading}
-									repos={this.state.repos}
+									searchUser={searchUser}
+									clearUsers={clearUsers}
+									showClear={users.length > 0 ? true : false}
+									setAlert={showAlert}
 								/>
-							)}
-						/>
-					</Switch>
-				</div>
-				<Footer />
-			</Router>
-		);
-	}
-}
+								<MultipleUser loading={loading} users={users} />
+							</>
+						)}
+					/>
+					<Route exact path='/about' component={About} />
+					<Route
+						exact
+						path='/user/:login'
+						render={(props) => (
+							<User
+								{...props}
+								getUser={getUser}
+								userRepos={getUserRepos}
+								user={user}
+								loading={loading}
+								repos={repos}
+							/>
+						)}
+					/>
+				</Switch>
+			</div>
+			<Footer />
+		</Router>
+	);
+};
 
 export default App;
